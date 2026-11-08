@@ -23,7 +23,8 @@ while true; do
     echo -e " 3. start panel"
     echo -e " 4. restart panel"
     echo -e " 5. install docker"
-    echo -e " 6. Soon!"
+    echo -e " 6. connect with domain"
+    echo -e " 7. Soon!"
     echo -e "_________________________________________________"
     echo -e "\033[0m"
 
@@ -75,7 +76,47 @@ docker create --name pufferpanel \
             echo ""
             read -p "Main menu par jaane ke liye [Enter] dabayein..."
             ;;
-        6)
+      6)
+            echo -e "\n\033[1;32m[+]Domain panel par lag rha he ...\033[0m"
+        sudo apt-get update
+sudo apt-get install nginx
+nano /etc/nginx/sites-enabled/pufferpanel.conf
+server {
+         listen 80;
+         root /var/www/pufferpanel;
+read -p "server_name me apke panel ka domain dale"
+         server_name ;
+
+         location ~ ^/\.well-known {
+           root /var/www/html;
+           allow all;
+         }
+
+         location / {
+             proxy_pass http://localhost:8080;
+             proxy_set_header X-Real-IP $remote_addr;
+             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+             proxy_set_header X-Nginx-Proxy true;
+             proxy_http_version 1.1;
+             proxy_set_header Upgrade $http_upgrade;
+             proxy_set_header Connection "Upgrade";
+             proxy_set_header Host $host;
+             client_max_body_size 100M;
+         }
+     }
+     systemctl restart nginx
+     sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx
+read -p "Now run the certbot command. Replace panel.auranodes.bond with your own domain."
+sudo certbot --nginx -d panel.auranodes.bond
+"web": {
+
+            echo -e "\n\033[1;32m[+]Domain panel lag chuka he! \033[0m"
+            echo ""
+            read -p "Main menu par jaane ke liye [Enter] dabayein..."
+            ;;
+             
+        7)
             echo -e "\n\033[1;33m[!] Option 4: Naye features jaldi aane wale hain!\033[0m"
             echo ""
             read -p "Main menu par jaane ke liye [Enter] dabayein..."
